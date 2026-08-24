@@ -38,7 +38,7 @@ type Cpu struct {
 
 }
 
-func (cpu Cpu) Reset(memory *Mem) {
+func (cpu *Cpu) Reset(memory *Mem) {
 	cpu.PC = 0xFFFC
 	cpu.SP = 0x00FF
 	cpu.PRSR = PSR{
@@ -53,13 +53,13 @@ func (cpu Cpu) Reset(memory *Mem) {
 	cpu.A, cpu.X, cpu.Y = 0, 0, 0
 	memory.Initialize()
 }
-func (cpu Cpu) FetchByte(cycles *u32, memory *Mem) Byte {
+func (cpu *Cpu) FetchByte(cycles *u32, memory *Mem) Byte {
 	var data Byte = memory.Mem_map[cpu.PC]
 	cpu.PC++
 	*cycles--
 	return data
 }
-func (cpu Cpu) Execute(cycles u32, memory *Mem) {
+func (cpu *Cpu) Execute(cycles u32, memory *Mem) {
 	for cycles > 0 {
 		ins := cpu.FetchByte(&cycles, memory)
 		switch ins {
