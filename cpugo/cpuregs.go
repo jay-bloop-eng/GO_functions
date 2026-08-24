@@ -1,4 +1,4 @@
-package main
+package cpugo
 
 const MAX_MEM u32 = 1024 * 64
 const (
