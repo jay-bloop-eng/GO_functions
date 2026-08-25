@@ -1,8 +1,12 @@
 package cpugo
 
+import "fmt"
+
 const MAX_MEM u32 = 1024 * 64
 const (
-	INS_LDA_IM = 0xA9
+	INS_LDA_IM  = 0xA9
+	INS_LDA_ZP  = 0xA5
+	INS_LDA_ZPX = 0xB5
 )
 
 type (
@@ -31,6 +35,13 @@ func (m *Mem) Initialize() {
 	}
 }
 
+// whilist Fetchbyte uses the PC in the cpu struct, mem.Access uses an external address
+func (m *Mem) Access(address Byte, cycles *u32) Byte {
+	data := m.Mem_map[address]
+	*cycles--
+	return data
+}
+
 type Cpu struct {
 	A, X, Y, SP Byte  //A = acumulator register, X and Y = index registers, SP = stack pointer
 	PC          Tbyte //PC = program counter
@@ -53,21 +64,24 @@ func (cpu *Cpu) Reset(memory *Mem) {
 	cpu.A, cpu.X, cpu.Y = 0, 0, 0
 	memory.Initialize()
 }
+
+// fetches the byte in PC++
 func (cpu *Cpu) FetchByte(cycles *u32, memory *Mem) Byte {
 	var data Byte = memory.Mem_map[cpu.PC]
 	cpu.PC++
 	*cycles--
 	return data
 }
-func (cpu *Cpu) Execute(cycles u32, memory *Mem) {
-	for cycles > 0 {
-		ins := cpu.FetchByte(&cycles, memory)
-		switch ins {
-		case INS_LDA_IM:
-			var value Byte = cpu.FetchByte(&cycles, memory)
-			cpu.A = value
-			cpu.PRSR.Z = (cpu.A == 0)
-			cpu.PRSR.N = (cpu.A & 0b10000000) > 0
-		}
+
+// fetches the byte @zpaddress without
+func (cpu *Cpu) FetchBytezp(cycles *u32, memory *Mem, zpaddress byte) Byte {
+	var data Byte
+	if zpaddress > 0b00001111 {
+		fmt.Printf("invalid memory location/ NOT in 0p: %x", zpaddress)
+	} else {
+		data = memory.Mem_map[zpaddress]
+		*cycles--
+		return data
 	}
+	return data
 }
