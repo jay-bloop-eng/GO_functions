@@ -1,0 +1,20 @@
+package cpugo
+
+const MAX_MEM u32 = 1024 * 64
+
+const (
+	INS_LDA_IM   = 0xA9
+	INS_LDA_ZP   = 0xA5
+	INS_LDA_ZPX  = 0xB5
+	INS_LDA_ABS  = 0xAD
+	INS_LDA_ABSX = 0xBD
+	INS_LDA_ABSY = 0xB9
+	INS_LDA_INDX = 0xA1
+	INS_LDA_INDY = 0xB1
+)
+
+type (
+	Byte  uint8
+	Tbyte uint16
+	u32   uint32
+)

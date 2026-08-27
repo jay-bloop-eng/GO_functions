@@ -2,19 +2,6 @@ package cpugo
 
 import "fmt"
 
-const MAX_MEM u32 = 1024 * 64
-const (
-	INS_LDA_IM  = 0xA9
-	INS_LDA_ZP  = 0xA5
-	INS_LDA_ZPX = 0xB5
-)
-
-type (
-	Byte  uint8
-	Tbyte uint16
-	u32   uint32
-)
-
 type PSR struct { // PSR = Processor status register
 	C bool
 	Z bool
@@ -36,7 +23,14 @@ func (m *Mem) Initialize() {
 }
 
 // whilist Fetchbyte uses the PC in the cpu struct, mem.Access uses an external address
-func (m *Mem) Access(address Byte, cycles *u32) Byte {
+func (m *Mem) Access(address Tbyte, cycles *u32) Byte {
+	data := m.Mem_map[address]
+	*cycles--
+	return data
+}
+
+// whilist Fetchbyte uses the PC in the cpu struct, mem.Access uses an external address
+func (m *Mem) AccessZp(address Byte, cycles *u32) Byte {
 	data := m.Mem_map[address]
 	*cycles--
 	return data
@@ -66,7 +60,7 @@ func (cpu *Cpu) Reset(memory *Mem) {
 }
 
 // fetches the byte in PC++
-func (cpu *Cpu) FetchByte(cycles *u32, memory *Mem) Byte {
+func (cpu *Cpu) FetchBytePc(cycles *u32, memory *Mem) Byte {
 	var data Byte = memory.Mem_map[cpu.PC]
 	cpu.PC++
 	*cycles--
