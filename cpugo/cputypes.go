@@ -1,6 +1,6 @@
 package cpugo
 
-const MAX_MEM u32 = 1024 * 64
+const MAX_MEM Utt = 1024 * 64
 
 const (
 	INS_LDA_IM   = 0xA9
@@ -16,5 +16,5 @@ const (
 type (
 	Byte  uint8
 	Tbyte uint16
-	u32   uint32
+	Utt   uint32
 )

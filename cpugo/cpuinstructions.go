@@ -1,6 +1,6 @@
 package cpugo
 
-func (cpu *Cpu) Execute(cycles *u32, memory *Mem) {
+func (cpu *Cpu) Execute(cycles *Utt, memory *Mem) {
 	for *cycles > 0 {
 		ins := cpu.FetchBytePc(cycles, memory)
 		switch ins {
