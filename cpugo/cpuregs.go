@@ -17,20 +17,20 @@ type Mem struct {
 }
 
 func (m *Mem) Initialize() {
-	for i := Utt(0); i < MAX_MEM; i++ {
+	for i := U32(0); i < MAX_MEM; i++ {
 		m.Mem_map[i] = 0
 	}
 }
 
 // whilist Fetchbyte uses the PC in the cpu struct, mem.Access uses an external address
-func (m *Mem) Access(address Tbyte, cycles *Utt) Byte {
+func (m *Mem) Access(address Tbyte, cycles *U32) Byte {
 	data := m.Mem_map[address]
 	*cycles--
 	return data
 }
 
 // whilist Fetchbyte uses the PC in the cpu struct, mem.Access uses an external address
-func (m *Mem) AccessZp(address Byte, cycles *Utt) Byte {
+func (m *Mem) AccessZp(address Byte, cycles *U32) Byte {
 	data := m.Mem_map[address]
 	*cycles--
 	return data
@@ -60,7 +60,7 @@ func (cpu *Cpu) Reset(memory *Mem) {
 }
 
 // fetches the byte in PC++
-func (cpu *Cpu) FetchBytePc(cycles *Utt, memory *Mem) Byte {
+func (cpu *Cpu) FetchBytePc(cycles *U32, memory *Mem) Byte {
 	var data Byte = memory.Mem_map[cpu.PC]
 	cpu.PC++
 	*cycles--
@@ -68,7 +68,7 @@ func (cpu *Cpu) FetchBytePc(cycles *Utt, memory *Mem) Byte {
 }
 
 // fetches the byte @zpaddress without
-func (cpu *Cpu) FetchBytezp(cycles *Utt, memory *Mem, zpaddress byte) Byte {
+func (cpu *Cpu) FetchBytezp(cycles *U32, memory *Mem, zpaddress byte) Byte {
 	var data Byte
 	if zpaddress > 0b00001111 {
 		fmt.Printf("invalid memory location/ NOT in 0p: %x", zpaddress)
